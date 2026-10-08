@@ -299,16 +299,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     (async () => {
       let stored = readUsers();
-      if (stored.length === 0) {
-        // Premier lancement : compte administrateur par défaut (haché en PBKDF2).
-        const created = await createUserRecord(
-          "Administrateur",
-          "admin@tcf.local",
-          "Admin123!",
-          "admin"
-        );
-        if (created.user) stored = [created.user];
-      }
+      // Ne pas créer de compte admin par défaut. Si aucun utilisateur, 
+      // laisser l'interface permettre l'inscription.
       setUsers(stored);
       setUser(readActiveSession(stored));
       setLoading(false);

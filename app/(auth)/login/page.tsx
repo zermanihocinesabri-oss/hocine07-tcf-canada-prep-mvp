@@ -28,8 +28,7 @@ export default function LoginPage() {
   const [remaining, setRemaining] = useState<number>(0);
   const [submitting, setSubmitting] = useState(false);
 
-  const showDefaultAdmin =
-    !loading && users.some((u) => u.email === "admin@tcf.local");
+    const showDefaultAdmin = false;
 
   // Déjà connecté ? On redirige (également utilisé après une connexion réussie).
   useEffect(() => {

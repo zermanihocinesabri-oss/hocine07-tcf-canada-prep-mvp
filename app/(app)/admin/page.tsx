@@ -30,9 +30,7 @@ function AdminOverview() {
   const recent = [...users]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 6);
-  const defaultAdminStillActive = users.some(
-    (u) => u.email === "admin@tcf.local" && u.id !== user?.id
-  );
+    const defaultAdminStillActive = false;
 
   const stats = [
     {
@@ -76,9 +74,8 @@ function AdminOverview() {
         <div className="mb-6 flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
           <AlertTriangle size={18} className="mt-0.5 shrink-0" />
           <p>
-            Le compte administrateur par défaut (<span className="font-semibold">admin@tcf.local</span>)
-            est encore actif. Pour des raisons de sécurité, changez son mot de passe ou supprimez-le
-            dans <Link href="/admin/users" className="font-semibold underline">Gérer les comptes</Link>.
+            Le compte administrateur par défaut est encore actif. Pour des raisons de sécurité, changez son mot de passe ou supprimez-le dans{" "}
+            <Link href="/admin/users" className="font-semibold underline">Gérer les comptes</Link>.
           </p>
         </div>
       )}
