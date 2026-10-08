@@ -1,13 +1,12 @@
 ﻿"use client";
 
-import { FormEvent, useState } from "react";
 import { AdminGuard } from "@/components/auth/Guards";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/lib/utils/authStore";
-import { clearUserData } from "@/lib/utils/userStorage";
-import { AppUser, UserRole } from "@/lib/types";
+import { readUserProgress, clearUserData } from "@/lib/utils/userStorage";
+import { AppUser, UserRole, ProgressState } from "@/lib/types";
 import {
   KeyRound,
   Pencil,
@@ -16,7 +15,12 @@ import {
   Trash2,
   UserRound,
   X,
+  ChevronDown,
+  ChevronUp,
+  BookOpen,
+  Trophy,
 } from "lucide-react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 
 const inputClass =
   "w-full rounded-xl border border-surface-300 bg-white px-3.5 py-2 text-sm text-surface-900 placeholder:text-surface-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100";
@@ -136,7 +140,19 @@ function UsersManager() {
     notify("ok", "Compte supprimé.");
   }
 
-  const sorted = [...users].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+  const sorted = [...users].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [progressMap, setProgressMap] = useState<Record<string, ProgressState>>({});
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const map: Record<string, ProgressState> = {};
+    for (const u of users) {
+      map[u.id] = readUserProgress(u.id);
+    }
+    setProgressMap(map);
+  }, [users]);
 
   return (
     <div className="p-6 lg:p-8">

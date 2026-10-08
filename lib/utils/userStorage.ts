@@ -6,10 +6,20 @@
  * est nommée « <base>:<userId> » afin que chaque compte ait son propre suivi.
  */
 
-const LEGACY_KEYS = ["tcf-progress", "tcf-recordings", "tcf-writings"];
+import { ProgressState } from "@/lib/types";
+import { isProgressState, readJson } from "@/lib/utils/sanitize";
+
+const EMPTY_STATE: ProgressState = { completedLessonIds: [], attempts: [] };
 
 export function userScopedKey(base: string, userId: string | null): string {
   return userId ? `${base}:${userId}` : `${base}:anon`;
+}
+
+const LEGACY_KEYS = ["tcf-progress", "tcf-recordings", "tcf-writings"];
+
+export function readUserProgress(userId: string): ProgressState {
+  if (typeof window === "undefined") return EMPTY_STATE;
+  return readJson(userScopedKey("tcf-progress", userId), isProgressState, EMPTY_STATE);
 }
 
 /**
